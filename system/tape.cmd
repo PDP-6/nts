@@ -1,7 +1,7 @@
 b
 ts
 f @.lisp
-f @.midas
+f nts.midas.256k midas
 f @.stink
 f @.teco
 f ddt.x256b ddt

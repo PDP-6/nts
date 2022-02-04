@@ -1,5 +1,0 @@
-HELLO PDP6
-
-PAGE2
-END
-
