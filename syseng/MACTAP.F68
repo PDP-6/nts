@@ -164,7 +164,7 @@ TAP4:	CONO UTC,360300+UTCCHN(A)
 	CONO DC,3410+TPCHN
 TAP3:	MOVE A,TAP1
 	MOVE B,TAP2
-	JRST 12,@TAPE
+	JRST 12,@TAPE
 
 TAPFOR:	HRRI B,TAPCNT
 	MOVEM B,40+TPCHN*2
@@ -883,4 +883,3 @@ DIRTAB:
 MOVTAB:
 	LOC MOVTAB+NDIR*200
 
-END aaaaa   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €a   €
