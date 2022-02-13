@@ -4,10 +4,11 @@
 #include <assert.h>
 #include "pdp6common.h"
 
-#define RELOC ((word)01000000000000)
-#define NRELOC ((word)02000000000000)
-#define LRELOC ((word)04000000000000)
+#define RELOC   ((word)01000000000000)
+#define NRELOC  ((word)02000000000000)
+#define LRELOC  ((word)04000000000000)
 #define LNRELOC ((word)010000000000000)
+#define FOO     ((word)020000000000000)
 
 #define W 0777777777777
 
@@ -28,6 +29,9 @@ word *dir;
 #define MASK(p, s) ((1<<(s))-1 << (p))
 #define DPB(b, p, s, w) ((w)&~MASK(p,s) | (b)<<(p) & MASK(p,s))
 #define XDPB(b, ppss, w) DPB(b, (ppss)>>6 & 077, (ppss)&077, w)
+
+word tmploader[0200];
+word tmpmacdmp[0400];
 
 void
 writesimh(FILE *f, word w)
@@ -181,13 +185,13 @@ bootcode(void)
 {
 	assert(blockinfo[075 -1] == 0);
 	blockinfo[075 -1] = 036;
-	memcpy(&dtbuf[075*0200], loader, 0200*sizeof(word));
+	memcpy(&dtbuf[075*0200], tmploader, 0200*sizeof(word));
 
 	assert(blockinfo[076 -1] == 0);
 	blockinfo[076 -1] = 036;
 	assert(blockinfo[077 -1] == 0);
 	blockinfo[077 -1] = 036;
-	memcpy(&dtbuf[076*0200], macdmp, 0400*sizeof(word));
+	memcpy(&dtbuf[076*0200], tmpmacdmp, 0400*sizeof(word));
 }
 
 
@@ -371,10 +375,19 @@ void
 relocate(word r)
 {
 	int i;
-	for(i = 0; i < 0200; i++)
-		loader[i] = reloc(loader[i], r);
+	int opntp;
 	for(i = 0; i < 0400; i++)
-		macdmp[i] = reloc(macdmp[i], r);
+		if(tmpmacdmp[i] & FOO)
+			opntp = i;
+	opntp += 037400 + r;
+	printf("OPNTP: %o\n", opntp);
+	for(i = 0; i < 0200; i++)
+		if(tmploader[i] & FOO)
+			tmploader[i] = fw(left(tmploader[i]), opntp-1);
+		else
+			tmploader[i] = reloc(tmploader[i], r);
+	for(i = 0; i < 0400; i++)
+		tmpmacdmp[i] = reloc(tmpmacdmp[i], r);
 }
 
 void
@@ -401,6 +414,7 @@ cmd(void)
 	initdir();
 	int type = Dump;
 	// cmds:
+	//   i		init dir (implicit after w)
 	//   b		boot tape
 	//   ta		ascii
 	//   td		dump
@@ -410,9 +424,36 @@ cmd(void)
 	//   w filename (init new tape)
 	while(p = fgets(line, 512, stdin)){
 		switch(*p++){
-		case 'b':
+		case '%':
+			// comment
+			break;
+		case 'i':
+			initdir();
+			break;
+		case 'b': {
+			int sz = 16;
+			word rel;
+			char disp = 'x';
+			n = sscanf(p, "%d %c", &sz, &disp);
+			memcpy(tmploader, loader, 0200*sizeof(word));
+			// this is a bit ugly i think
+			if(sz == 256){
+				if(disp == 'd')
+					memcpy(tmpmacdmp, macdmp_u256d, 0400*sizeof(word));
+				else
+					memcpy(tmpmacdmp, macdmp_u256, 0400*sizeof(word));
+				rel = 0740000;
+			}else if(sz == 64){
+				memcpy(tmpmacdmp, macdmp, 0400*sizeof(word));
+				rel = 0140000;
+			}else if(sz == 16){
+				memcpy(tmpmacdmp, macdmp, 0400*sizeof(word));
+				rel = 0;
+			}
+			relocate(rel);
 			bootcode();
 			break;
+		}
 		case 't':
 			switch(*p++){
 			case 'a': type = Ascii; break;
@@ -479,7 +520,7 @@ main()
 	dir = &dtbuf[0100*0200];
 
 	// TODO: option?
-	relocate(0740000);	// moby
+//	relocate(0740000);	// moby
 
 	cmd();
 	// TODO: option?
