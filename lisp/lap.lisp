@@ -1,0 +1,160 @@
+
+
+(DEFPROP LAP
+ (LAMBDA (SL)
+  (PROG (LOC CONLIST GEN REMOB L )
+        (SETQ GEN (GENSYM))
+        (SETQ CONLIST (LIST NIL))
+        (SETQ LOC 0)
+   A    (COND ((NULL (SETQ L (READ))) (GO END))
+              ((ATOM L) (DEFSYM L (PLUS BPORG LOC)) (GO A)))
+        (GWD L)
+        (GO A)
+   END  (DEFSYM GEN (PLUS BPORG LOC))
+   EN1  (COND
+         ((NULL (SETQ CONLIST (CDR CONLIST)))
+          (EVAL (CONS (QUOTE REMOB) REMOB))
+          (PUTPROP (CAR SL)
+          	(COND ((EQ BPORG (PLUS BPORG 0)) (SUB1 BPORG))
+          		(T (CDDDR BPORG)))
+          	(CADR SL))
+        (RETURN (SETQ BPORG (PLUS BPORG LOC)))))
+        (GWD (CAR CONLIST))
+        (GO EN1)))
+FEXPR)
+
+
+(DEFPROP GWD
+ (LAMBDA (X)
+  (PROG (FLD TEM)
+A       (COND ((NULL X)
+               (RDEPOSIT  LOC  (APPLY (QUOTE PLUS) FLD))
+               (RETURN (SETQ LOC (ADD1 LOC)))))
+        (SETQ TEM (LAPEVAL (CAR X)))
+        (SETQ FLD (CONS (COND ((NULL FLD) TEM)
+        	((NULL (CDR  FLD)) (LSH TEM 27))
+        	((NULL (CDDR FLD)) (BOOLE 1 TEM 777777))
+        	((LSH TEM 18.)))
+                        FLD))
+        (SETQ X (CDR X))
+        (GO A)))
+EXPR)
+
+(DEFPROP LAPEVAL
+ (LAMBDA (X)
+  (COND ((NUMBERP X) X)
+        ((ATOM X)
+         (COND ((GET X (QUOTE VALUE)) (MAKNUM X (QUOTE FIXNUM)))
+               (T (GVAL X))))
+        ((MEMBER (CAR X) (QUOTE (E QUOTE)))
+         (MAKNUM (COND ((OR (NOT (ATOM (SETQ X (CADR X))))
+                            (AND (NUMBERP X)
+                                 (NOT (EQ (PLUS X 0) X))))
+                        (PROG (Y)
+                              (SETQ Y QLIST)
+                         A    (COND ((NULL Y)
+                                     (RETURN
+                                      (CAR
+                                       (SETQ QLIST
+                                             (CONS X QLIST)))))
+                                    ((EQUAL X (CAR Y))
+                                     (RETURN (CAR Y))))
+                              (SETQ Y (CDR Y))
+                              (GO A)))
+                       (T X))
+                 (QUOTE FIXNUM)))
+        ((EQ (CAR X) (QUOTE SPECIAL))
+         (COND
+          ((NULL (GET (CADR X) (QUOTE VALUE)))
+           (PUTPROP (CADR X) (LIST NIL) (QUOTE VALUE))))
+         (MAKNUM (GET (CADR X) (QUOTE VALUE)) (QUOTE FIXNUM)))
+        ((EQ (CAR X) (QUOTE C))
+         (PROG (N CPTR)
+        (COND ((AND (EQ (CADR X) 0) (EQ (CADDR X) 0))
+		(COND ((AND (EQUAL (SETQ N (CADDDR X)) (QUOTE (QUOTE NIL)))
+			(NULL (CDDDDR X))) (RETURN 70))
+
+        ((AND (NUMBERP N)  (EQ N (CADDDR (CDR X)))
+        (LESSP N 6) (NOT (MINUSP N))) (RETURN (PLUS N 70))))))
+               (GVAL GEN)
+               (SETQ N 0)
+               (SETQ CPTR CONLIST)
+          A    (COND
+                ((NULL (CDR CPTR)) (RPLACD CPTR (LIST (CDR X)))))
+               (COND ((EQUAL (CDR X) (CADR CPTR)) (RETURN N)))
+               (SETQ N (ADD1 N))
+               (SETQ CPTR (CDR CPTR))
+               (GO A)))
+        (T (PLUS (LAPEVAL (CAR X)) (LAPEVAL (CDR X))))))
+EXPR)
+
+(DEFPROP DEFSYM
+ (LAMBDA (SYM VAL)
+  (PROG (Z)
+        (COND ((SETQ Z (GET SYM (QUOTE UNDEF))) (GO PATCH)))
+   A    (COND ((EQ (LENGTH (CDR SYM)) 2) (SETQ REMOB (CONS SYM REMOB))))
+        (RETURN (PUTPROP SYM VAL (QUOTE SYM)))
+   PATCH(COND ((NULL Z) (RPLACD SYM (CDDDR SYM)) (GO A)))
+        (RDEPOSIT (CAR Z)
+ (PLUS (EXAMINE (PLUS BPORG (CAR Z)))  VAL))
+        (SETQ Z (CDR Z))
+        (GO PATCH)))
+EXPR)
+
+(DEFPROP GVAL
+ (LAMBDA (SYM)
+  (COND ((GET SYM (QUOTE SYM)))
+        (T (PUTPROP SYM
+                    (CONS LOC (GET SYM (QUOTE UNDEF)))
+                    (QUOTE UNDEF))
+           0)))
+EXPR)
+
+(DEFPROP OPS
+ (LAMBDA (L)
+  (PROG (REMOB)
+   A    (COND ((NULL L) (RETURN T)))
+        (DEFSYM (CAR L)  (CADR L))
+        (SETQ L (CDDR L))
+        (GO A)))
+FEXPR)
+
+(OPS MOVE 200000000000 MOVEI 201000000000 MOVEM 202000000000 
+JRST 254000000000 CALL 
+74000000000 JCALL 75000000000 
+PUSHJ 260000000000 POPJ 263000000000 PUSH 261000000000 
+POP 
+262000000000 P 14 JSP 265000000000 EXCH 250000000000 
+JUMPE 322000000000 JUMPN 
+326000000000 SOJE 362000000000 
+SOJN 366000000000 CAIE 302000000000 CAIN 306000000000 
+CAME 
+312000000000 CAMN 316000000000 CALLF 76000000000 
+JCALLF 77000000000 HRRZ@ 550020000000 HLRZ@ 
+554020000000 
+TDZA 634000000000 SUB 274000000000 HRRZ 550000000000 
+HLRZ 554000000000
+ CLEARM 402000000000 CLEARB 403000000000 ADD 270000000000 
+MOVNI 211000000000 CALLF@ 76020000000 JCALLF@ 77020000000
+ HRRM@ 542020000000 
+HRLM@ 506020000000 HRRZS@ 553020000000 HLLZS@ 513020000000
+ DPB 137000000000)
+
+(COND ((NULL (GET (QUOTE QLIST) (QUOTE VALUE)))
+(SETQ QLIST NIL))
+)
+
+
+(DEFPROP REMLAP (LAMBDA (L) (PROG (Z)
+(SETQ Z (QUOTE (LAP LAPEVAL GWD DEFSYM REMLAP OPS ILAP GVAL)))
+A (COND ((NULL Z)(GO B)))
+(REMPROP (CAR Z)(QUOTE EXPR))
+(REMPROP (CAR Z)(QUOTE FEXPR))
+(SETQ Z (CDR Z))(GO A)
+
+ B (COND (L (MAPCAR (FUNCTION (LAMBDA (X) (MAPCAR (FUNCTION (LAMBDA (Y)
+(REMPROP Y (QUOTE SYM)))) X))) OBLIST)))))
+FEXPR)
+
+(DEFPROP RDEPOSIT (LAMBDA (X Y) (DEPOSIT (PLUS BPORG X) Y)) EXPR)
+
