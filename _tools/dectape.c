@@ -519,8 +519,10 @@ main()
 {
 	dir = &dtbuf[0100*0200];
 
-	// TODO: option?
-//	relocate(0740000);	// moby
+	// HACK: patch display delay a bit in MACDMP
+	for(int i = 0; i < 0400; i++)
+		if(right(macdmp_u256d[i]) == 034)
+			macdmp_u256d[i] = fw(left(macdmp_u256d[i]), 050);
 
 	cmd();
 	// TODO: option?
