@@ -6,6 +6,15 @@ non-timesharing programs.
 For most of the files the source had to be reconstructed
 from binaries found on DECtape images or the MIT archive.
 
+What we have:
+
+- MACDMP
+- TECO
+- MIDAS
+- DDT
+- STINK
+- LISP
+
 cd to dirs and do
 `../_tools/mkdectape < tape.cmd` to create the tapes in dta format.
 to convert to dtr (used by aap/pdp6), do `dta2dtr < in.dta > out.dtr`.

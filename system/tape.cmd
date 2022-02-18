@@ -5,4 +5,5 @@ f nts.midas.u256k midas
 f nts.teco6.u256k teco
 f ddt.256k opddt
 f ddt.d256k opdddt
+f stink.256k stink
 w system.dta
