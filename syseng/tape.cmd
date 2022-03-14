@@ -1,6 +1,6 @@
 ta
 f AIO.R25
-f DIS.R1
+f MIDDPY.R1
 f LPT.11
 f MACTAP.F68
 f macdmp.6u256
